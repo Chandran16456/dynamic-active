@@ -14,7 +14,7 @@ from app.routes.note_routes import router as note_router
 from app.routes.schedule_routes import router as schedule_router
 from app.routes.attendance_routes import router as attendance_router
 from app.routes.ai_report_routes import router as ai_report_router
-
+from app.routes.dev_seed_routes import router as dev_seed_router
 from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 
@@ -53,6 +53,7 @@ app.include_router(note_router)
 app.include_router(schedule_router)
 app.include_router(attendance_router)
 app.include_router(ai_report_router)
+app.include_router(dev_seed_router)
 
 
 @app.get("/")
@@ -76,4 +77,3 @@ def on_startup():
 @app.on_event("shutdown")
 def on_shutdown():
     stop_scheduler()
-    

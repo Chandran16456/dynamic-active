@@ -15,6 +15,7 @@ from app.routes.schedule_routes import router as schedule_router
 from app.routes.attendance_routes import router as attendance_router
 from app.routes.ai_report_routes import router as ai_report_router
 from app.routes.dev_seed_routes import router as dev_seed_router
+
 from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 
@@ -23,22 +24,24 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Dynamic Active API")
 
 
-frontend_url = os.getenv("FRONTEND_URL", "")
+frontend_url = os.getenv("FRONTEND_URL", "").strip()
 
 allowed_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://dynamic-active-production.up.railway.app",
 ]
 
-if frontend_url:
+if frontend_url and frontend_url not in allowed_origins:
     allowed_origins.append(frontend_url)
 
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.up\.railway\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -77,3 +80,4 @@ def on_startup():
 @app.on_event("shutdown")
 def on_shutdown():
     stop_scheduler()
+    

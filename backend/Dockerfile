@@ -19,4 +19,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python -c \"from app.database import Base, engine; from app import models; Base.metadata.create_all(bind=engine); print('Database tables checked')\" && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "python -c \"from app.database import Base, engine; from app import models; Base.metadata.create_all(bind=engine); print('Database tables checked')\" && python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
